@@ -24,7 +24,6 @@
 \usepackage{verbatim}  % support for unformatted text, almost mandatory
 \usepackage{graphicx}  % support for figures etc., almost mandatory
 \usepackage{array}     % extra table features, almost mandatory
-\usepackage{pbalance}  % equal heights in last page columns (demands additional LaTeX passes)
 \usepackage{mathtools} % extra visual tweaks/features for math, read the docs
 
 % Table improvements
@@ -55,10 +54,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ARTICLE METADATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% With bibLaTeX, the bibliographic databases are defined in the preamble.
-% Call \addbibresource multiple times to use more than one file.
-\addbibresource{bibliografia.bib}
 
 \metadata
   {
@@ -174,7 +169,6 @@
 
 \furtherinfo{Informações adicionais relevantes, como, por exemplo, a aprovação em comitê de ética ou o uso de ferramentas de IA generativa no desenvolvimento do artigo. Essa declaração é opcional, se não houver nada a ser acrescentado, pode ser deixada em branco}
 
-\SBCprintbibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN TEXT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -369,5 +363,6 @@ Imagens vetoriais (como diagramas e gráficos, a exemplo das Figuras~\ref{fig:pa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\SBCprintbibliography
 
 \end{document}

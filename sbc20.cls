@@ -342,6 +342,17 @@
 \LoadClass{article}
 
 
+% --- SILENCIADOR DE WARNINGS INOFENSIVOS ---
+\RequirePackage{silence}
+% Silencia o aviso chato do kernel/babel sobre showhyphens
+\WarningFilter{latex}{Command \showhyphens has changed}
+\WarningFilter{babel}{Command \showhyphens has changed}
+\WarningFilter{latex}{Font shape} % Filtra qualquer erro de shape
+\WarningFilter{latex}{Some font shapes} % Filtra o resumo final
+\WarningFilter{latexfont}{Font shape} % Filtra erros específicos de fonte
+\WarningFilter{latexfont}{Some font shapes}
+% -------------------------------------------
+
 %===============================================================================
 % 5. Basic LaTeX parameters and packages
 %===============================================================================
@@ -437,7 +448,7 @@
 \RequirePackage{amsthm}
 \RequirePackage{amsmath}
 
-\RequirePackage[hyperref,svgnames,x11names,table]{xcolor} % color support
+\RequirePackage[svgnames,x11names,table]{xcolor} % color support
 
 % hyperref likes to be loaded later on but, in case some package
 % forces it to be loaded before our explicit \RequirePackage, let's
@@ -447,7 +458,7 @@
   pdfencoding=unicode,
   plainpages=false,
   pdfpagelabels,
-  bookmarksopen=true,
+  bookmarksopen=false,
   breaklinks=true,
   hyperfootnotes=false, % incompatible with bigfoot
 }{hyperref}
@@ -868,76 +879,133 @@
     {,\space and\space}
 }
 
-
 %===============================================================================
-% 9. Bibliography
+% 9. Bibliography (ABNT NBR 6023 / 10520)
 %===============================================================================
 
-\RequirePackage{csquotes}
+% --- CONFIGURAÇÃO DO ESTILO ---
+\def\SBCbibType{num} 
+% ------------------------------
 
-% Each SBC event may choose to use one of two different bibliographic styles.
-% We could do \PassOptionsToPackage here to set the other options and let the
-% user call \usepackage[style=something]{biblatex} to select the correct style.
-% However, we want to be able to instruct authors to simply copy the \metadata
-% command for each particular SBC event and have everything work - including
-% the bibliographic style. This forces us to load biblatex from within the
-% \metadata command which, in turn, means that \addbibresource has to be called
-% *after* \metadata. This is a hack to work around this limitation.
-\newrobustcmd*\addbibresource[1]{\AtEndPreamble{\addbibresource{#1}}}
+\RequirePackage[\SBCbibType,abnt-emphasize=bf,abnt-etal-list=0,abnt-and-type=e]{abntex2cite}
+\RequirePackage{etoolbox}
+\RequirePackage{url} 
 
-\NewDocumentCommand\@SBCbibConfig{m}{
-  \undef\addbibresource % eliminate the above hack
-  \RequirePackage[
-      natbib=false,
-      hyperref=true,
-      autolang=hyphen,
-      % biblatex-abnt presets language=brazil. As mentioned before, we prefer
-      % brazilian. Setting language=auto here *should* override the default,
-      % but does not, so we set the language here. We also set "auto" hoping
-      % that it works, but that is not so important.
-      language=\languagename,
-      language=auto,
-      style=#1,
-  ]{biblatex}
+% --- BLINDAGEM DE COMPATIBILIDADE ---
+\providecommand{\abntnextkey}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abnturl}[1]{\url{#1}}
+\providecommand{\abntexcite}[2]{}
+% ------------------------------------
 
-  % TODO: remove mention to atenddvi bug after 2024
-  % Prevent a bibliography entry to be split in two pages or columns.
-  % Beyond the asthetic aspect, this bypasses this bug, which is more
-  % likely to appear in the bibliography:
-  % https://github.com/ho-tex/atenddvi/issues/1
-  % We also implemented another, more radical workaround in the section
-  % where hyperxmp is loaded.
-  \AtBeginBibliography{\interlinepenalty=10000\raggedbottom}
-
-  \renewbibmacro*{begentry}{%
-    \textcolor{white}{%
-      {\fontsize{0.1pt}{5pt}\selectfont%
-        \printtext[brackets]{%
-          \begingroup%
-            begin-ref-item%
-          \endgroup%
-        }%
-      }%
-    }%
-  }%
-
-  \renewbibmacro*{finentry}{%
-    \hspace{-1.5mm}
-    \textcolor{black}{.}
-    \textcolor{white}{%
-      {\fontsize{0.1pt}{5pt}\selectfont%
-        \printtext[brackets]{%
-          \begingroup%
-            end-ref-item%
-          \endgroup%
-        }%
-      }%
-    }%
-  }%
-    
-  \renewcommand*{\bibfont}{\small}
+% --- Lógica das Tags Ocultas ---
+\newcommand{\SBCmarker}[1]{%
+  \textcolor{white}{{\fontsize{0.1pt}{5pt}\selectfont#1}}%
 }
 
+% Armazena comandos originais
+\let\origbibitem\bibitem
+\let\origthebibliography\thebibliography
+\let\endorigthebibliography\endthebibliography
+
+% 1. Redefine o ambiente da bibliografia
+\renewenvironment{thebibliography}[1]{%
+  \def\bibpreamble{\SBCmarker{\#\#init\_bibliography\#\#}}%
+  
+  % Ajuste Vertical do Título
+  \vspace{-15pt}%
+  \section*{\refname}%
+  \vspace{-15pt}%
+  
+  \bibpreamble%
+  \small%
+  \raggedright%
+  
+  % LISTA
+  \list{\@biblabel{\@arabic\c@enumiv}}{%
+    \setlength{\leftmargin}{20pt}\setlength{\labelwidth}{15pt}%
+    \setlength{\labelsep}{-3pt}\setlength{\itemindent}{-1.5ex}%
+    \setlength{\listparindent}{0pt}%
+    \setlength{\itemsep}{-5pt}% Itens compactos
+    \setlength{\parsep}{0pt}%
+    \setlength{\topsep}{0pt}%
+    \def\makelabel##1{\hfill##1}%
+    \usecounter{enumiv}\let\p@enumiv\@empty%
+    \renewcommand\theenumiv{\@arabic\c@enumiv}%
+  }%
+  
+  % BLOQUEIO DE QUEBRA DE PÁGINA
+  \sloppy 
+  \interlinepenalty=10000 
+  \clubpenalty=10000      
+  \widowpenalty=10000     
+  
+  \sfcode`\.\@m%
+  \gdef\SBCisFirstItem{1}%
+}{%
+  \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist%
+  \SBCmarker{[end-ref-item]}%
+  \SBCmarker{\#\#end\_bibliography\#\#}%
+}
+
+% 2. Redefine o bibitem
+\renewcommand{\bibitem}[2][]{%
+  \ifdefined\SBCisFirstItem%
+    \global\let\SBCisFirstItem\undefined%
+  \else%
+    \SBCmarker{[end-ref-item]}%
+  \fi%
+  \if\relax\detokenize{#1}\relax\origbibitem{#2}\else\origbibitem[#1]{#2}\fi%
+  \SBCmarker{[begin-ref-item]}%
+}
+
+% 3. Impressão (Declarações + Seleção Inteligente de .BST + Referências)
+\newcommand{\SBCprintbibliography}{%
+  
+  % PARTE A: Declarações
+  \par
+  {\begin{decl}\@declinfo\end{decl}}\par
+  \ifdefvoid{\@contributeinfo}{}{\begin{contributeinformation}\@contributeinfo\end{contributeinformation}\par}
+  \ifdefvoid{\@aboutauthors}{}{\begin{authorinfo}\@aboutauthors\end{authorinfo}\par}
+  \ifdefvoid{\@acknowledgements}{}{\begin{acks}\@acknowledgements\end{acks}\par}
+  \ifdefvoid{\@fundinginfo}{}{\begin{fundinginformation}\@fundinginfo\end{fundinginformation}\par}
+  \ifdefvoid{\@datainfo}{}{\begin{datainformation}\@datainfo\end{datainformation}\par}
+  \ifdefvoid{\@furtherinfo}{}{\begin{furtherinformation}\@furtherinfo\end{furtherinformation}\par}
+  
+  % PARTE B: Seleção do Arquivo de Estilo (.BST)
+  % Se o título for "References" (Inglês), usa o arquivo editado 'abntex2-num-en'
+  % Se não (Português), usa o arquivo padrão 'abntex2-num'
+  \ExplSyntaxOn
+    \ifdefstring{\refname}{References}{
+        \bibliographystyle{abntex2-num-en}
+    }{
+        \bibliographystyle{abntex2-num}
+    }
+  \ExplSyntaxOff
+  
+  % PARTE C: Bibliografia
+  \begingroup
+    % Layout
+    \let\clearpage\relax 
+    \let\cleardoublepage\relax
+    \let\newpage\relax 
+    \setcounter{topnumber}{10}\setcounter{bottomnumber}{10}\setcounter{totalnumber}{20}
+    \renewcommand{\topfraction}{0.99}\renewcommand{\bottomfraction}{0.99} 
+    \renewcommand{\textfraction}{0.01}\renewcommand{\floatpagefraction}{0.01} 
+       
+    
+    % Silencia o comando que gera os labels duplicados no .aux
+    % Isso impede que ++EXPL, ++IMPL, etc sejam recriados
+    \renewcommand{\abntrefinfo}[3]{} 
+    % ---------------------------------------
+
+    \bibliography{bibliografia} 
+  \endgroup
+
+  % PARTE D: Instituições
+  \iftoggle{@SBCinstitutionsAtEnd}{\@SBCshowInstitutionsAsEndBlock}{}
+}
 
 %===============================================================================
 % 10. Footnotes
@@ -1510,12 +1578,19 @@
     copyrightyear .value_required:n = true,
     idjems .tl_gset:N = \@idjems,
     idjems .value_required:n = true,
-    pubname.tl_gset:N = \@pubTitle,
+    pubname .tl_gset:N = \@pubTitle,
     pubname .value_required:n = true,
-    pubacron.tl_gset:N = \@pubAcron,
+    pubacron .tl_gset:N = \@pubAcron,
     pubacron .value_required:n = true,
-    bibstyle .tl_gset:N = \@SBCbibStyle,
+    
+    % --- ALTERAÇÃO AQUI ---
+    % Mudamos de .tl_gset (gravar valor) para .code:n (executar código vazio).
+    % Isso faz com que o template ignore o "sbc20" vindo do .tex 
+    % e mantenha o "sbc" que definimos como padrão.
+    bibstyle .code:n = {}, 
     bibstyle .value_required:n = true,
+    % ----------------------
+
     colorlinks .code:n = {\ifstrequal{#1}{true}{\toggletrue{@SBCcolorlinks}}{\togglefalse{@SBCcolorlinks}}},
     colorlinks .default:n = {true},
     nocolorlinks .code:n = {\togglefalse{@SBCcolorlinks}},
@@ -1523,7 +1598,7 @@
   }
 
 \NewDocumentCommand\@SBCrealMetadata{m}{
-  % Process arguments
+  % Limpa variáveis
   \tl_gclear_new:N \@articleCategory
   \tl_gclear_new:N \@articleLicense
   \tl_gclear_new:N \@copyrightYear
@@ -1533,60 +1608,29 @@
   \tl_gclear_new:N \@pubAcron
   \tl_gclear_new:N \@pubAcronLC
   \tl_gclear_new:N \@SBCbibStyle
-  \tl_gset:Nn \@articleLicense {CC-BY} % Default license
-  \tl_gset:Nn \@SBCbibStyle {sbc20} % Default bibliographic style
+  
+  \tl_gset:Nn \@articleLicense {CC-BY} 
+  
   \keys_set:nn {SBC/metadata}{#1}
 
+  % --- CORREÇÃO DEFINITIVA (Espaços Forçados + Fonte Menor) ---
+  \str_if_eq:VnT \@articleLicense {CC-BY}
+  {
+     \tl_gset:Nn \@articleLicense {
+        \href{https://creativecommons.org/licenses/by/4.0/}{%
+           % 1. Define fonte menor (scriptsize)
+           \scriptsize
+           % 2. Usa \hspace para garantir separação visual
+           \ccLogo \hspace{1mm} \ccAttribution \hspace{1mm} \@copyrightYear \hspace{1mm} 
+           % 3. Usa '\ ' (barra + espaço) para separar palavras no texto
+           Creative\ Commons\ Attribution\ 4.0\ International\ License\ (CC\ BY\ 4.0)%
+        }%
+     }
+  }
+  % ------------------------------------------------------------
+
   \tl_gset:Nn \@pubAcronLC {\@pubAcron}
-  
   \tl_gset:Nn \@doi {10.5753/{\@pubAcronLC}.{\@copyrightYear}.{\@idjems}}
-
-  \exp_args:NV \@SBCbibConfig\@SBCbibStyle
-
-  \exp_args:NV \str_case:nnF \@articleLicense
-    {
-      {CC-BY}{\gdef\@articleLicense{%
-        \href{https\c_colon_str//creativecommons.org/licenses/by/4.0/}{\ccby
-        \scriptsize\space\space\@copyrightYear\space
-        Creative~Commons~Attribution~4.0~International~License~(CC~BY~4.0)}}
-      }
-
-      {CC-BY-NC}{\gdef\@articleLicense{%
-        \href{https\c_colon_str//creativecommons.org/licenses/by-nc/4.0/}{\ccbync
-        \scriptsize\space\space\@copyrightYear\space
-        Creative~Commons~Attribution-NonCommercial~4.0~International~License~(CC~BY-NC~4.0)}}
-      }
-
-      {CC-BY-ND}{\gdef\@articleLicense{%
-        \href{https\c_colon_str//creativecommons.org/licenses/by-nd/4.0/}{\ccbynd
-        \scriptsize\space\space\@copyrightYear\space
-        Creative~Commons~Attribution-NoDerivatives~4.0~International~License~(CC~BY-ND~4.0)}}
-      }
-
-      {CC-BY-SA}{\gdef\@articleLicense{%
-        \href{https\c_colon_str//creativecommons.org/licenses/by-sa/4.0/}{\ccbysa
-        \scriptsize\space\space\@copyrightYear\space
-        Creative~Commons~Attribution-ShareAlike~4.0~International~License~(CC~BY-SA~4.0)}}
-      }
-
-      {CC-BY-NC-SA}{\gdef\@articleLicense{%
-        \href{https\c_colon_str//creativecommons.org/licenses/by-nc-sa/4.0/}{\ccbyncsa
-        \scriptsize\space\space\@copyrightYear\space
-        Creative~Commons~Attribution-NonCommercial-ShareAlike~4.0~International~License~(CC~BY-NC-SA~4.0)}}
-      }
-
-      {CC-BY-NC-ND}{\gdef\@articleLicense{%
-        \href{https\c_colon_str//creativecommons.org/licenses/by-nc-nd/4.0/}{\ccbyncnd
-        \scriptsize\space\space\@copyrightYear\space
-        Creative~Commons~Attribution-NonCommercial-NoDerivatives~4.0~International~License~(CC~BY-NC-ND~4.0)}}
-      }
-    }
-    % If there is no match, use the user-supplied text
-    {
-      \ifdefvoid{\@articleLicense}
-        {}
-        {\tl_put_left:Nn \@articleLicense {\scriptsize}}
-    }
 }
 
 \AtEndPreamble{
@@ -1847,7 +1891,7 @@
 \@onlypreamble\datainfo
 \@onlypreamble\contributeinfo
 \@onlypreamble\aboutauthors
-\@onlypreamble\SBCprintbibliography
+% \@onlypreamble\SBCprintbibliography
 
 % Build two macros with the names of the authors:
 %
@@ -2070,14 +2114,14 @@
     }%
 }
 
-\newcommand\SBCprintbibliography[1]{%
-    \protected@xdef\@SBCprintbibliography{\par
-        \SBCprintInitKeyBibliography\par
-        \printbibliography\par
-        \SBCprintEndKeyBibliography\par
-        \trim@spaces@noexp{#1}\par
-    }%
-}
+% \newcommand\SBCprintbibliography[1]{%
+%     \protected@xdef\@SBCprintbibliography{\par
+%         \SBCprintInitKeyBibliography\par
+%         \printbibliography\par
+%         \SBCprintEndKeyBibliography\par
+%         \trim@spaces@noexp{#1}\par
+%     }%
+% }
 
 \ExplSyntaxOn
 \newcommand\@SBCshowInstitutionsAsEndBlock{
@@ -2092,41 +2136,7 @@
 }
 \ExplSyntaxOff
 
-\AtEndDocument{\par
-  {\begin{decl}\@declinfo\end{decl}}
-  
-  \ifdefvoid{\@contributeinfo}
-    {}
-    {\begin{contributeinformation}\@contributeinfo\end{contributeinformation}}
 
-  \ifdefvoid{\@aboutauthors}
-    {}
-    {\begin{authorinfo}\@aboutauthors\end{authorinfo}}
-
-  \ifdefvoid{\@acknowledgements}
-    {}
-    {\begin{acks}\@acknowledgements\end{acks}}
-
-  \ifdefvoid{\@fundinginfo}
-    {}
-    {\begin{fundinginformation}\@fundinginfo\end{fundinginformation}}
-
-  \ifdefvoid{\@datainfo}
-    {}
-    {\begin{datainformation}\@datainfo\end{datainformation}}
-
-  \ifdefvoid{\@furtherinfo}
-    {}
-    {\begin{furtherinformation}\@furtherinfo\end{furtherinformation}}
-
-  \ifdefvoid{\@SBCprintbibliography}
-    {}
-    {\@SBCprintbibliography}
-
-  \iftoggle{@SBCinstitutionsAtEnd}
-    {\@SBCshowInstitutionsAsEndBlock}
-    {}
-}
 
 %===============================================================================
 % 12. Hyperlink support and PDF metadata (XMP)
@@ -3173,5 +3183,13 @@
 }
 
 \ExplSyntaxOff
+
+% --- SOLUÇÃO FINAL PARA WARNING DE FONTE ---
+% Isso altera a variável global que define o que é "texto inclinado".
+% Ao mudar para 'it' (itálico), o LaTeX para de procurar a forma 'sl' (que falta).
+\AtBeginDocument{%
+   \renewcommand{\sldefault}{it}%
+}
+% -------------------------------------------
 
 \endinput
