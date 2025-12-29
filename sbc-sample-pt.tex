@@ -1,0 +1,475 @@
+% Sample article using the sbc20 class.
+%
+% The non-textual content of this file (package loading commands, explanatory comments, etc.) was originally created by Nelson Lago <lago@ime.usp.br> and José Viterbo Filho <viterbo@ic.uff.br>. It is licensed under the Creative Commons Attribution International Licence, v4.0 (CC-BY 4.0)
+% https://creativecommons.org/licenses/by/4.0/
+%
+% Using the non-textual content of this file as a template to produce your own document without further attribution to the authors above is permitted and encouraged.
+%
+% charset: utf-8 ãàáâéêíõóôúç ÃÀÁÂÉÊÍÕÓÔÚÇ
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%% CLASS DECLARATION %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% The language is the main language of the document. You may choose "portuguese", "english" or "spanish"
+% Remove "notblind" to hide the authors
+\documentclass[portuguese,notblind]{sbc20}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% PACKAGES DECLARATIONS %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Support for unformatted text
+\usepackage{verbatim}  
+% Almost mandatory
+
+% Support for figures etc. 
+\usepackage{graphicx}
+% Almost mandatory
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Extra features for table .
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Extra table features.
+\usepackage{array}
+% Almost mandatory
+
+% Equal heights in last page columns - demands additional LaTeX passes
+\usepackage{pbalance}
+% Confirm in the CFP if it is mandatory or not
+
+% Extra visual tweaks/features for math, read the docs
+\usepackage{mathtools}
+% Optional. Comment for compiling faster.
+
+% Table improvements
+\usepackage{booktabs}
+% Recommended, read the docs. Comment for compiling faster.
+
+% table cells that span over multiple rows
+\usepackage{multirow}
+% If not used, comment for compiling faster.
+
+% Better table headings / cells with linebreaks inside
+\usepackage{makecell} 
+% If not used, comment for compiling faster.
+
+% Align numeric columns on the decimal separator (siunitx also offers this)
+\usepackage{dcolumn}
+% If not used, comment for compiling faster.
+
+% multi-page tables
+\usepackage{longtable} 
+% If not used, comment for compiling faster.
+
+% tables with "footnotes"
+\usepackage{threeparttable}
+% If not used, comment for compiling faster.
+
+% colored table cells
+%\usepackage{colortbl}
+% If not used, comment for compiling faster.
+
+% load a csv file and format as table
+%\usepackage{csvsimple}
+% If not used, comment for compiling faster.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Extra features for floats
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \sidewaystable, \sidewaysfigure, and other rotation commands
+\usepackage{rotating}
+% If not used, comment for compiling faster.
+
+% manually control float placement, read the docs
+\usepackage[above,below]{placeins}
+% If not used, comment for compiling faster.
+
+% subfigures (side by side) with subcaptions (pkg subfigure is deprecated)
+\usepackage{subcaption}
+% If not used, comment for compiling faster.
+
+% resize, clip etc. for any material, not only floats
+\usepackage{adjustbox} 
+% If not used, comment for compiling faster.
+
+% Source code syntax highlighting - good and simple
+%\usepackage{listings}
+% If not used, comment for compiling faster.
+
+% Source code syntax highlighting - excellent, but depends on pygments (python, free software)
+%\usepackage{minted} 
+% If not used, comment for compiling faster.
+
+% Numbers: units, scientific notation, better presentation for large numbers
+%\usepackage{siunitx}
+% If not used, comment for compiling faster.
+
+% useful in the writing/reviewing phase
+%\usepackage{pdfcomment} 
+% If not used, comment for compiling faster.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% ARTICLE METADATA %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% With bibLaTeX, the bibliographic databases are defined in the preamble. Call \addbibresource multiple times to use more than one file.
+\addbibresource{bibliografia.bib}
+
+% The field "pubname" must contain the name of the conference to which the paper is being submitted.
+% The field "pubacron" must contain the acronym of the respective conference.
+% The field "idjems" must contain the id that the paper received in JEMS or other conference management system. This field only needs to be filled in for the camera-ready version. You may leave as "XXX" for the first submission.
+% The field "copyrightyear" must contain the year of the conference.
+% The field "category" must contain the category of the paper, both in Portuguese and English, if the paper is in Portuguese, or only in English, if the paper is in English.
+% The field "bibstyle" is used to select the bibliography style. Use "sbc20" for numbered style or "sbc20-authordate" for author-date style.
+%nocolorlinks, % disable colored hyperlinks, for B&W printing
+\metadata
+  {
+    pubname={Simpósio Brasileiro de Alguma Área de Pesquisa},
+    pubacron={SBAAP},
+    idjems={XXX},
+    copyrightyear=2025,
+    category={Artigo Completo/Full Paper},
+    bibstyle=sbc20,
+  }
+
+% The field "mainlanguagetitle" must contain the proper title of the paper in the same language it was written, i.e, if the paper is in Portuguese, the field must contain the title in Portuguese, if the paper is in Spanish, the field must contain the title in Spanish, and if the paper is in English, the field must contain the title in English.
+% The field "translatedtitle" must contain a version of the title in English, only if the paper is in Portuguese or Spanish. If the paper is in English, the field must remain empty.
+\title
+  {
+    mainlanguagetitle={Exemplo de uso do template da SBC para artigos em português para publicação em anais de eventos na SOL},
+
+    translatedtitle={Example of use of the SBC template for papers written in Portuguese to be published in SOL event proceedings},
+  }
+
+% The fields "shortauthor" and "shorttitle" are used in the headers from the page 2 onwards and are optional. if not defined, the complete title and all authors will appear. If there a 3 or more authors, it is highly recommended that the authors fill in the "shortauthor" field. If the title is too long, it is highly recommended that the authors fill in the "shorttitle" field.
+\shortauthor{Viterbo et al. 2025}
+\shorttitle{Exemplo de artigo em Português para a SOL}
+  
+
+% It is mandatory to fill in all the fields that describe information about the authors
+% The field "email" must contain a valid email address of the author. To use special chars in email addresses (%, _, $, &, #, ~ etc.) put the whole address within braces
+% The field "orcid" must contain the author's orcid code, without the initial "https://orcid.org/...". If you don't have an OrcId, visit the site "https://orcid.org" and make your own register.
+% The field "institutionID" must contain a unique acronym to refer to the record with information about each institution to which the authors are affiliated (this record will be presented ahead). If the author is affiliated to more than one institution, use multiple fields "institutionID" or include multiple acronyms separated by commas within braces in one field.
+% The field "country" must contain a a two-characters code of the country whre the main affiliation of the author is located. Use "BR" for Brazil. To other find other countries' codes, check the table presented in the meta-paper.
+% The fields "firstName" and "lastName" must contain the full name of the author. This information will be used to in the DOI record. Remember that you will be cited as "lastName, firstName", so, if your name is "John Paul Smith Jr." and yoou want to be cited as "Smith Jr., John Paul" or "Smith Jr., J.P.", use  "firstName=John~Paul" and "lastName=Smith~Jr.". Use the character '~' to saparate strings in each field.
+\author
+  {
+    email=viterbo@ic.uff.br,
+    orcid=0000-0002-0339-6624, 
+    institutionID=UFF,
+    institutionID=SBC,
+    country=BR,
+    firstName=José,
+    lastName=Viterbo 
+  }
+
+% You may enumarate as many authors as needed
+\author
+  {
+    email=lago@ime.usp.br,
+    orcid=0000-0002-4306-8078,
+    institutionID={USP},
+    country=BR,
+    firstName=Nelson~Silva,
+    lastName=Lago
+  }
+  
+\author
+  {
+    email=rmvieira@inf.ufrgs.br,
+    orcid=0009-0009-1113-0867,
+    institutionID={UFRGS},
+    country=BR,
+    firstName=Raphael~Malinski,
+    lastName=Vieira
+  }
+
+\author
+  {
+    email=granville@inf.ufrgs.br,
+    orcid=0000-0001-8956-8660,
+    institutionID={UFRGS,SBC},
+    country=BR,
+    firstName=Lisandro,
+    lastName=Granville
+  }
+
+
+%For fiulling in your affiliation in the institution record, provide only the name of your top-level academic/research organization. This is the only relevant information for most citation databases. Use the "extraAffiliationsLast" field to include additional details about your affiliations, such as position or department.
+
+%Fill in the institution record with an acronym and the full institution name
+
+%If possible, to ensure standardization and correct accounting of this publication for your institution, please use your institution's name in one of the forms presented in the Research Organizations Register (ROR): https://ror.org/
+
+%If the institutions listed
+
+%ROR ID https://ror.org/02rjhbb08
+\institution{UFF}{Universidade Federal Fluminense}
+
+%ROR ID https://ror.org/04pk33v91
+\institution{SBC}{Sociedade Brasileira de Computação}
+
+%ROR ID https://ror.org/036rp1748
+\institution{USP}{Universidade de São Paulo}
+
+%ROR ID https://ror.org/041yk2d64
+\institution{UFRGS}{Universidade Federal do Rio Grande do Sul}
+
+
+% As discussed before, if necessary, this space can be used to detail/complement information about authors and their affiliations. This item is optional...
+\extraAffiliationsLast{José Viterbo é Prof. Associado do Instituto de Computação da UFF e Diretor de Publicações da SBC. Nelson Lago é pesquisador do Centro de Competência em Software Livre da USP e da Escola de Artes, Ciências e Humanidades da UPa. Raphael Malinski Vieira é aluno do curso de Bacharelado em Ciência da Computação da UFRGS. Lisandro Granville é Prof. Titular do Instituto de Informática da UFRGS e Diretor Financeiro da SBC.}
+
+% The field "resumo" must contain the abstract of the paper in Portuguese, if the paper is in Portuguese, or in Spanish, if the paper is in Spanish. If the paper is in English, the field must be removed o left empty.
+\resumo
+  {
+    Este texto, em formato de artigo científico, tem por objetivo demonstrar o uso do novo template para artigos da SBC para anais de eventos da SOL, descrevendo suas principais características e explicando como deve ser utilizado para artigos em português. Sugerimos que o resumo em português tenha entre 500 e 750 palavras, mas os organizadores de cada evento podem estebelecer outros limites.
+  }
+
+% The field "abstract" must contain the abstract of the paper in English.
+\abstract
+  {
+    This text, in scientific article format, aims to demonstrate the use of the new SBC template for papers to be published at SOL event proceedings, describing its main characteristics and explaining how it should be used for papers written in Portuguese. We suggest that the summary in Portuguese be between 500 and 750 words, but the organizers of each event can establish other limits.
+  }
+
+% The field "palavraschave" must contain a list of keywords in Portuguese, if the paper is in Portuguese, or in Spanish, if the paper is in Spanish. If the paper is in English, the field must be removed o left empty.
+\palavraschave{Anais de evento \sep Modelo \sep SBC OpenLib \sep Indexação}
+
+% The field "abstract" must contain a list of keywords of the paper in English.
+\keywords{Proceedings \sep Template \sep SBC OpenLib \sep Indexing}
+
+% Below there is a set of declarations, some mandatory and some optional, that will appear at the end of the document, before the bibliography.
+
+% The field "contributeinfo" is mandatory and brings information about the role of each author in the production of the paper. When possible, use the CRediT standard, as described in https://www.elsevier.com/researcher/author/policies-and-guidelines/credit-author-statement
+\contributeinfo{JV elaborou a primeira versão do template e os textos explicativos. NSL aprimorou o modelo. LG propôs a inclusão de metadados no PDF gerado e RMV implementou esta proposta.}
+
+% The field "acknowledgements" is optional and brings acknowledgements to people or institutions that contributed to the research, but are not authors. If there is no acknowledgement, it must be left empty.
+\acknowledgements{Agradecimentos a colegas, colaboradores etc. Essa declaração é opcional, se não houver nenhum agradecimento, pode ser deixada em branco}
+
+% The field "funding" is optional and indicates funding agencies, etc. If there is no funding, it should be left blank.
+\funding{Indicação de agências financiadoras etc. Essa declaração é opcional, se não houver nenhum financiamento, pode ser deixada em branco.}
+
+% The "datainfo" field is mandatory and provides information or links to obtain additional data and materials available, such as code, project page, etc. This statement is mandatory. If the data is not previously made available, it may be stated: "Additional data and/or materials may be made available upon request".
+\datainfo{
+  Informações ou links para dados  e materiais adicionais disponíveis, como código, página do projeto etc. Essa declaração é obrigatória. Se os dados não forem disponibilizados previamente, pode-se declarar: ``Os dados e/ou materiais adicionais poderão ser disponibilizados mediante solicitação''.
+}
+
+% The "furtherinfo" field is optional and contains additional relevant information, such as approval by an ethics committee or the use of generative AI tools in the development of the article. If there is no further information to be provided, it must be left empty.
+\furtherinfo{Informações adicionais relevantes, como, por exemplo, a aprovação em comitê de ética ou o uso de ferramentas de IA generativa no desenvolvimento do artigo. Essa declaração é opcional, se não houver nada a ser acrescentado, pode ser deixada em branco}
+
+\SBCprintbibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN TEXT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+\label{sec:intro}
+
+A SBC OpenLib\footnote{\url{sol.sbc.org.br}} é a nova biblioteca digital da Sociedade Brasileira de Computação (SBC), e tem como objetivo principal viabilizar o acesso à informação especializada em Computação. Seu acervo é composto por anais de eventos, periódicos de visibilidade nacional e internacional, livros e capítulos resultantes da produção científica efetuada no âmbito da SBC, oferecendo acesso aberto a todas as publicações.
+
+Este texto, em formato de artigo científico, tem por objetivo apresentar o novo modelo para artigos da SBC, descrevendo suas principais características, explicando como deve ser utilizado e apresentando exemplos práticos. Esta versão, mais especificamente, deve ser utilizada como referência exclusivamente para a elaboração de artigos escritos em português que serão publicados em alguma série de anais de eventos na SBC OpenLib.
+
+Este mesmo modelo deve ser adotado tanto para artigos completos quanto artigos curtos, cabendo aos organizadores de eventos definirem os limites máximos e mínimos para o número de páginas em cada caso. A Tabela~\ref{tab:equivalence} mostra a correspondência do número de páginas entre o novo modelo e o antigo modelo de artigos da SBC, a fim de orientar os organizadores de eventos na transição de modelos. 
+
+% TODO: Mudamos o tamanho da fonte, é preciso recalcular isto! -> fiz um experimento com blind text, a proporção foi 9:6, ou seja, esta tabela parece ok.
+\begin{table}[!hb]
+\centering
+\begin{tabular}{@{}cc@{}}
+\toprule
+Template antigo & Template 2025 \\
+\midrule
+ 4  & 3 \\
+ 6  & 4 \\
+ 8  & 6 \\
+ 12  & 8 \\
+\bottomrule
+\end{tabular}
+\caption{Correspondência do número de páginas considerando o modelo de artigos da SBC antigo e o novo modelo lançado em 2025.\label{tab:equivalence}}
+\end{table}
+
+A Figura~\ref{fig:page-layout} apresenta o \emph{layout} de página. As próximas seções apresentam informações detalhadas sobre cada parte do modelo. Na Seção 2, descrevemos os detalhes do cabeçalho do artigo. Na Seção 3, descrevemos os detalhes da abertura do artigo. Na Seção 4, descrevemos as seções e subseções do documento. Na Seção 5, descrevemos o uso de tabelas, figuras e algoritmos no artigo. Na Seção 6, discutimos as formas de citações e a inclusão de referências.
+
+% TODO: if there will not be a footer, remove it from the figure
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/page-layout}
+  \caption{\emph{Layout} da página. O tamanho é A4 (210\,x\,297\,mm);
+  a mancha de texto (1 e 2) mede 175\,x\,246\,mm; a margem superior
+  (3) é 26\,mm e a margem inferior (4) é 23\,mm; as margens esquerda
+  (5) e direita (6) medem 17,5\,mm; o espaço entre o cabeçalho e o
+  texto (7) é 10\,pt; a distância entre o final do texto e o final do
+  rodapé (8) é 18\,pt; o espaço entre as colunas (não mostrado) é
+  18\,pt.\label{fig:page-layout}}
+\end{figure}
+
+\section{Cabeçalho}
+
+O cabeçalho do artigo tem duas variações, uma para a primeira página e outra para as páginas seguintes. Ambas são descritas nas subseções a seguir.
+
+\subsection{Cabeçalho da Primeira Página}
+
+Na primeira página, o cabeçalho apresenta o título da série e o ano da edição em uma primeira linha. A segunda linha traz a descrição da licença de publicação, que para os eventos que disponibilizam seus artigos na SBC OpenLib corresponde à licença CC BY 4.0. Os autores devem preencher a informação do título da série, acrônimo do evento e ano do evento nos campos \textit{jtitle}, \textit{jid} e \textit{jyear}, respectivamente. A informação sobre a licença deve constar do campo \textit{copyrightstatement}.
+
+\subsection{Cabeçalho da Página 2 em diante}
+
+A partir da página 2, o cabeçalho apresenta o título resumido à esquerda e a lista de autores resumida à direita. O título abreviado do artigo e a lista abreviada de autores devem ser preenchidos em \textit{shorttitle} e \textit{shortauthors}, respectivamente.
+
+\section{Abertura}
+
+O preâmbulo do artigo contém os principais metadados que descrevem o artigo: o título, o resumo e as palavras-chave, tanto em inglês, quanto em português.
+
+\subsection{Título}
+
+\subsection{Autores}
+
+\section{Bibliografia}
+
+Citações e referências bibliográficas devem seguir o formato definido pela ABNT (NBR\,10520, versão 2002 e NBR\,6023 versão 2002 ou, preferencialmente, 2018). Os organizadores de cada evento definem se as citações seguirão o formato numérico ou autor-data. Observe que:
+
+\begin{itemize}
+  \item Endereços web (URLs) não são colocados entre ``<\,>'' (esse é o padrão na versão 2018 da NBR\,6023)
+  \item ``In'' e ``et al.'' são formatados em itálico (esse é o padrão na versão 2018 da NBR\,6023)
+  \item No formato numérico, os sobrenomes não são grafados em caixa alta
+  \item No formato autor-data, usa-se versalete para os sobrenomes (com a primeira letra maiúscula)
+\end{itemize}
+
+\section{Outros exemplos}
+
+Esta classe é baseada na classe \texttt{article} e, portanto, os comandos usuais de \LaTeX, como \textsf{\textbackslash{}verse}, \textsf{\textbackslash{}quotation} etc. podem ser usados normalmente:
+
+\begin{verse}
+Batatinha quando nasce\\
+Espalha a rama pelo chão
+
+A menina quando dorme\\
+Põe a mão no coração
+\end{verse}
+
+\begin{quotation}
+\itshape
+Algum tempo hesitei se devia abrir estas memórias pelo princípio ou
+pelo fim, isto é, se poria em primeiro lugar o meu nascimento ou a
+minha morte. Suposto o uso vulgar seja começar pelo nascimento,
+duas considerações me levaram a adotar diferente método: a
+primeira é que eu não sou propriamente um autor defunto, mas um
+defunto autor, para quem a campa foi outro berço; a segunda é que
+o escrito ficaria assim mais galante e mais novo. Moisés, que também
+contou a sua morte, não a pôs no intróito, mas no cabo: diferença
+radical entre este livro e o Pentateuco.
+\end{quotation}
+
+Equações de segundo grau (Equação \ref{eq:2grau}) são estudadas no ensino
+médio. As raízes de uma equação de segundo grau podem ser encontradas
+por~\eqref{eq:bhaskara} --- a fórmula de Bháskara. O valor do discriminante
+$\Delta$ (Equação \ref{eq:delta}) determina se a equação tem zero, uma ou
+duas raízes reais distintas.
+
+\begin{equation}
+  \label{eq:2grau}
+  ax^2+bx+c=y \quad \forall x \in \mathbb{R}
+\end{equation}
+
+\begin{gather}
+  \label{eq:bhaskara}
+    y=0 \Leftrightarrow x=\frac{-b \pm \sqrt{\Delta}}{2a}
+    \Leftrightarrow x \text{ é raiz da equação}\\
+  \label{eq:delta}
+    \Delta\enspace(\mathit{delta}) = b^2-4ac
+\end{gather}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/xkcd_552_correlation}
+   \caption{A bitmap figure (from \url{xkcd.com/552}).\label{fig:xkcd-correlation}}
+\end{figure}
+
+\begin{figure*}[b]
+  \centering
+  \includegraphics{figures/graph-functions}
+  \caption{A vector figure spanning both text columns.\label{fig:graph-functions}}
+\end{figure*}
+
+Imagens vetoriais (como diagramas e gráficos, a exemplo das Figuras~\ref{fig:page-layout}~e~\ref{fig:graph-functions}) \emph{não} devem ser convertidas para \emph{bitmaps}, mas sim mantidas em algum formato vetorial, como PDF. Imagens não-vetoriais com cores predominantemente sólidas (como a Figura~\ref{fig:xkcd-correlation}) devem ser convertidas para o formato PNG e imagens fotográficas ou com texturas devem ser convertidas para o formato JPEG. Uma figura ou tabela muito grande (Figura~\ref{fig:graph-functions}, Tabela~\ref{tab:form}) pode excepcionalmente ocupar a largura das duas colunas de texto, mas apenas no início ou no final da página. Todas as figuras e tabelas devem ser acompanhadas das respectivas legendas explicativas numeradas logo abaixo delas.
+
+\begin{table*}
+  \centering
+  \newcolumntype{M}[1]{>{\centering}m{#1\textwidth}}
+  \begin{threeparttable}
+    \begin{tabular}{|M{0.265}|M{0.073}|M{0.084}|M{0.073}|M{0.073}|M{0.08}|M{0.082}|M{0.067}|}
+        \hline
+      \textbf{Experimento número:} & \multicolumn{2}{c|}{1} & \multicolumn{4}{c|}{\textbf{Data:}} & jan 2017
+        \tabularnewline \hline
+      \textbf{Título:} & \multicolumn{7}{c|}{Medições iniciais}
+        \tabularnewline \hline
+      \textbf{Tipo:} & \multicolumn{7}{c|}{Levantamento quantitativo}
+        \tabularnewline \hline \hline
+      \textbf{Locais}          & São Paulo & Rio de Janeiro & Porto Alegre & Recife & Manaus & Brasília & Rio Branco
+        \tabularnewline \hline
+      \textbf{Valores obtidos} & 0.2       & 0.3            & 0.2          & 0.7    & 0.5    & 0.1      & 0.4\tnote{a}
+        \tabularnewline \hline
+    \end{tabular}
+    \begin{tablenotes}
+      \item[a] This is an example of table footnote with a reference
+      \item This is an example of table footnote without a reference
+    \end{tablenotes}
+    \caption{A table spanning both text columns.\label{tab:form}}
+  \end{threeparttable}
+\end{table*}
+
+\section{Conclusion}
+
+\begin{itemize}
+  \item @Book: \cite{Knuth:96}.
+
+  \item @Article (em periódico): \cite{floats2014}.
+
+  \item @InProceedings (ou @Conference): \cite{alves03:simi}.
+
+  \item @InCollection (capítulo de livro ou coletânea): \cite{bobaoglu93:concepts}.
+
+  \item @PhdThesis: \cite{garcia01:PhD}.
+
+  \item @MastersThesis: \cite{schmidt03:MSc}.
+
+  \item @Techreport: \cite{alvisi99:analysisCIC}.
+
+  \item @Manual: \cite{biblatex}.
+
+  \item @Misc: \cite{gridftp}.
+
+  \item @Online (para referência a artigo \emph{online}): \cite{fowler04:designDead}.
+
+  \item @Online (para referência a página web): \cite{FSF:GNU-GPL}.
+
+  \item @article (para referência a página web): \cite{alon09:how}.
+  
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
