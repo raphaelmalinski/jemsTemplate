@@ -113,7 +113,6 @@
 %
 % 16. Auxiliary macros: squeezeText and related material - nothing interesting
 
-
 %===============================================================================
 % 1. Identification
 %===============================================================================
@@ -152,6 +151,30 @@
 % be applied, this means we have a version of LaTeX that already
 % incorporates it.
 \patchcmd\@combinedblfloats{\box\@outputbox}{\unvbox\@outputbox}{}{}
+
+% --- Ícone ORCID Otimizado (Cache em Memória + Correção de Fonte) ---
+\RequirePackage{tikz}
+\definecolor{orcidgreen}{HTML}{A6CE39}
+
+% 1. Cria a caixa
+\newsavebox{\@SBCorcidBox}
+
+% 2. Atrasa o desenho para o início do documento (quando as fontes já existem)
+\AtBeginDocument{%
+  \sbox{\@SBCorcidBox}{%
+    \begin{tikzpicture}[yscale=-1,transform shape, baseline=-2pt]
+      \fill[orcidgreen] (0,0) circle (5pt);
+      % Substituído \tiny por \fontsize explícito para evitar erros
+      \node[white, font=\bfseries\fontsize{5}{5}\selectfont] at (0,0) {iD};
+    \end{tikzpicture}%
+  }%
+}
+
+% 3. Comando de uso
+\newcommand{\SBCorcidicon}[1]{%
+  \href{https://orcid.org/#1}{\usebox{\@SBCorcidBox}}%
+}
+% --------------------------------------------------------------------
 
 
 %===============================================================================
@@ -1584,9 +1607,9 @@
     pubacron .value_required:n = true,
     
     % --- ALTERAÇÃO AQUI ---
-    % Alterado de .tl_gset (gravar valor) para .code:n (executar código vazio).
+    % Mudamos de .tl_gset (gravar valor) para .code:n (executar código vazio).
     % Isso faz com que o template ignore o "sbc20" vindo do .tex 
-    % e mantenha o "sbc" como padrão.
+    % e mantenha o "sbc" que definimos como padrão.
     bibstyle .code:n = {}, 
     bibstyle .value_required:n = true,
     % ----------------------
@@ -1613,7 +1636,7 @@
   
   \keys_set:nn {SBC/metadata}{#1}
 
-  % --- CORREÇÃO (Espaços Forçados + Fonte Menor) ---
+  % --- CORREÇÃO DEFINITIVA (Espaços Forçados + Fonte Menor) ---
   \str_if_eq:VnT \@articleLicense {CC-BY}
   {
      \tl_gset:Nn \@articleLicense {
@@ -1891,6 +1914,7 @@
 \@onlypreamble\datainfo
 \@onlypreamble\contributeinfo
 \@onlypreamble\aboutauthors
+% \@onlypreamble\SBCprintbibliography
 
 % Build two macros with the names of the authors:
 %
@@ -2113,6 +2137,15 @@
     }%
 }
 
+% \newcommand\SBCprintbibliography[1]{%
+%     \protected@xdef\@SBCprintbibliography{\par
+%         \SBCprintInitKeyBibliography\par
+%         \printbibliography\par
+%         \SBCprintEndKeyBibliography\par
+%         \trim@spaces@noexp{#1}\par
+%     }%
+% }
+
 \ExplSyntaxOn
 \newcommand\@SBCshowInstitutionsAsEndBlock{
   \@SBCformatInstitutions
@@ -2321,61 +2354,128 @@
 % 13. Front matter layout (title, abstract, list of authors etc.)
 %===============================================================================
 
+% --- Macro auxiliar para formatar autores horizontalmente ---
+\ExplSyntaxOn
+
+% --- Declaração de Variáveis (Evita o erro "Undefined control sequence") ---
+\tl_new:N \l_inst_internal_tl
+\tl_new:N \l_inst_marker_tl
+\tl_new:N \l_inst_name_tl
+\seq_new:N \l_sbc_markers_seq  % Lista para guardar os números (1, 2) temporariamente
+
+\NewDocumentCommand{\@SBCHorizontalAuthors}{}{
+  \lineskip .5em
+  
+  % Loop pelos autores
+  \int_step_inline:nn { \value{numberOfAuthors} }
+    {
+      \tl_set:Nx \l_tmpa_tl { @SBCauthor \int_to_Roman:n { ##1 } }
+      \prop_get:cnN { \l_tmpa_tl } { name } \l_tmpb_tl
+      \prop_get:cnN { \l_tmpa_tl } { orcid } \l_tmpc_tl
+      \prop_get:cnN { \l_tmpa_tl } { instids } \l_tmpd_clist 
+      
+      % Imprime Nome
+      \textbf{ \l_tmpb_tl }
+
+      % Processa Instituições
+      \clist_if_empty:NF \l_tmpd_clist
+        {
+          % Limpa a lista de números para este autor
+          \seq_clear:N \l_sbc_markers_seq
+          
+          % Percorre os IDs (UFF, SBC) e busca os números
+          \clist_map_inline:Nn \l_tmpd_clist
+            {
+               % Verifica se o ID existe no mapa
+               \prop_get:NnNTF \@SBCinstIDsMap { ####1 } \l_inst_internal_tl
+               {
+                  % Pega o marcador (1, 2...)
+                  \prop_get:cnN { \l_inst_internal_tl } { marker } \l_inst_marker_tl
+                  % Adiciona na lista sequencial
+                  \seq_put_right:NV \l_sbc_markers_seq \l_inst_marker_tl
+               }
+               { 
+                  % Se o ID não existir, adiciona um "?" para avisar
+                  \seq_put_right:Nn \l_sbc_markers_seq { ? }
+               }
+            }
+          
+          % Imprime a lista de números sobrescritos, separados por vírgula
+          \textsuperscript{ \seq_use:Nn \l_sbc_markers_seq { , } }
+        }
+
+      % Imprime ORCID
+      \tl_if_empty:NF \l_tmpc_tl
+        { \textsuperscript{ \SBCorcidicon{\l_tmpc_tl} } }
+
+      % Separadores (, ou "e")
+      \int_compare:nNnTF { ##1 } < { \value{numberOfAuthors} - 1 }
+        { ,~ } 
+        {
+          \int_compare:nNnT { ##1 } = { \value{numberOfAuthors} - 1 }
+            { ~e~ } 
+        }
+    }
+}
+
+% --- 2. Macro de Lista de Afiliações (Horizontal) ---
+\NewDocumentCommand{\@SBCPrintAffiliations}{}{
+  \vspace{0.8em}
+  % Verifica se existem instituições cadastradas
+  \int_compare:nNnT { \value{numberOfInstitutions} } > { 0 }
+  {
+    \begingroup
+    \small \itshape \centering
+    
+    % Loop de 1 até o Total de Instituições
+    \int_step_inline:nn { \value{numberOfInstitutions} }
+    {
+       \tl_set:Nx \l_inst_internal_tl { @SBCinst \int_to_Roman:n { ##1 } }
+       
+       % Recupera Nome e Marcador
+       \prop_get:cnN { \l_inst_internal_tl } { name } \l_inst_name_tl
+       \prop_get:cnN { \l_inst_internal_tl } { marker } \l_inst_marker_tl
+       
+       % Imprime: 1. Nome da Univ
+       \textsuperscript{\l_inst_marker_tl} \l_inst_name_tl
+       
+       % Lógica da Vírgula: Se índice < total, imprime ", "
+       \int_compare:nNnT { ##1 } < { \value{numberOfInstitutions} }
+       { ,~ } 
+    }
+    \par % Fecha o parágrafo apenas no final de tudo
+    \endgroup
+  }
+}
+\ExplSyntaxOff
+
 \renewcommand{\maketitle}{
-    % Prevent floats at the top of the page; since the article
-    % class does this, it probably works correctly :). The value
-    % is reset by \@startdblcolumn (defined in the LaTeX format).
     \global\@topnum\z@
     \thispagestyle{plain}
 
-    % Code adapted from \maketitle as defined by the article class
-    % to handle footnotes defined in the preamble (for example,
-    % in \title). We first limit the changes to a group:
     \bgroup
-
-    % Now temporarily disable hyperlink colors
     \hypersetup{hidelinks}
-
-    % Then make footnotes that might appear in the abstract use the
-    % \thanks & \@thanks mechanism. Footnotes in the title or the
-    % authors use \titlethanks, defined earlier.
     \let\footnote\thanks
 
-    % The paper is typeset in two columns, but the title, abstract etc.
-    % are typeset in a single column. To do this, we insert this initial
-    % material as the first argument of the \twocolumn command.
-    \twocolumn [\@SBCtitleblock]
+    \twocolumn [
+      \begin{center}
+        {\Large\bfseries \@title \par}
+        \vspace{1.5em}
+        
+        % Autores (lê IDs e busca números)
+        {\large \@SBCHorizontalAuthors \par}
+        
+        % Instituições (lista todas as cadastradas via \institution)
+        \@SBCPrintAffiliations
+      \end{center}
+    ]
 
-    % Typeset the footnotes from the title block and restore normal
-    % footnote behavior. As mentioned before, we piggyback \@thanks and
-    % process all the footnote classes defined with bigfoot/manyfoot
-    % here too.
     \@thanks
     \egroup
-
-    % Since \@thanks calls \footnotetext, which only works in outer
-    % paragraph mode, \@thanks just inserted an empty line above. We
-    % need to compensate for that.
     \par\vspace{-\baselineskip}
-
-    % The first paragraph should not be indented, should not be preceded
-    % by a page/column break, and should not have a widow line. This is
-    % probably unnecessary, as the first paragraph will probably be
-    % "\section{Introduction}", but let's cover all the bases.
     \@afterindentfalse\@afterheading
-
-    % Most likely, the article will begin with "\section{Introduction}".
-    % \section adds space before itself, except at the beginning of a
-    % page or column. However, we just added an empty line, so we are
-    % not at the start of the column anymore. To prevent the unwanted
-    % extra space before "Introduction", we could just do \vspace{-X pt}
-    % here. Unfortunately, that would break badly if the column did not
-    % start with \section for some reason. Thankfully, \section uses
-    % \addvspace. 30pt here simply means "something larger than the
-    % space \section inserts before itself".
     \vspace{-30pt}\addvspace{30pt}
-
-} % End of \maketitle
+}
 
 
 \newcommand{\@SBCtitleblock}{
@@ -3174,7 +3274,7 @@
 
 \ExplSyntaxOff
 
-% --- SOLUÇÃO PARA WARNING DE FONTE ---
+% --- SOLUÇÃO FINAL PARA WARNING DE FONTE ---
 % Isso altera a variável global que define o que é "texto inclinado".
 % Ao mudar para 'it' (itálico), o LaTeX para de procurar a forma 'sl' (que falta).
 \AtBeginDocument{%
