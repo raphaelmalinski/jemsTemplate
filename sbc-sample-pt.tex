@@ -48,6 +48,10 @@
 \usepackage{array}
 % Almost mandatory
 
+% Equal heights in last page columns - demands additional LaTeX passes
+% \usepackage{pbalance}
+% Confirm in the CFP if it is mandatory or not
+
 % Extra visual tweaks/features for math, read the docs
 \usepackage{mathtools}
 % Optional. Comment for compiling faster.
@@ -128,6 +132,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% With bibLaTeX, the bibliographic databases are defined in the preamble. Call \addbibresource multiple times to use more than one file.
+% \addbibresource{bibliografia.bib}
 
 % The field "pubname" must contain the name of the conference to which the paper is being submitted.
 % The field "pubacron" must contain the acronym of the respective conference.
@@ -184,7 +190,7 @@
     orcid=0000-0002-4306-8078,
     institutionID={USP},
     country=BR,
-    firstName=Nelson~Silva,
+    firstName={Nelson Silva},
     lastName=Lago
   }
   
@@ -194,7 +200,7 @@
     orcid=0009-0009-1113-0867,
     institutionID={UFRGS},
     country=BR,
-    firstName=Raphael~Malinski,
+    firstName={Raphael Malinski},
     lastName=Vieira
   }
 
@@ -270,6 +276,7 @@
 % The "furtherinfo" field is optional and contains additional relevant information, such as approval by an ethics committee or the use of generative AI tools in the development of the article. If there is no further information to be provided, it must be left empty.
 \furtherinfo{Informações adicionais relevantes, como, por exemplo, a aprovação em comitê de ética ou o uso de ferramentas de IA generativa no desenvolvimento do artigo. Essa declaração é opcional, se não houver nada a ser acrescentado, pode ser deixada em branco}
 
+% \SBCprintbibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN TEXT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
