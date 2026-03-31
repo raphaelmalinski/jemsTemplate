@@ -1607,9 +1607,9 @@
     pubacron .value_required:n = true,
     
     % --- ALTERAÇÃO AQUI ---
-    % Mudamos de .tl_gset (gravar valor) para .code:n (executar código vazio).
+    % Alterado de .tl_gset (gravar valor) para .code:n (executar código vazio).
     % Isso faz com que o template ignore o "sbc20" vindo do .tex 
-    % e mantenha o "sbc" que definimos como padrão.
+    % e mantenha o "sbc" como padrão.
     bibstyle .code:n = {}, 
     bibstyle .value_required:n = true,
     % ----------------------
@@ -1636,7 +1636,6 @@
   
   \keys_set:nn {SBC/metadata}{#1}
 
-  % --- CORREÇÃO DEFINITIVA (Espaços Forçados + Fonte Menor) ---
   \str_if_eq:VnT \@articleLicense {CC-BY}
   {
      \tl_gset:Nn \@articleLicense {
@@ -1914,7 +1913,6 @@
 \@onlypreamble\datainfo
 \@onlypreamble\contributeinfo
 \@onlypreamble\aboutauthors
-% \@onlypreamble\SBCprintbibliography
 
 % Build two macros with the names of the authors:
 %
@@ -2136,15 +2134,6 @@
         \trim@spaces@noexp{#1}\par
     }%
 }
-
-% \newcommand\SBCprintbibliography[1]{%
-%     \protected@xdef\@SBCprintbibliography{\par
-%         \SBCprintInitKeyBibliography\par
-%         \printbibliography\par
-%         \SBCprintEndKeyBibliography\par
-%         \trim@spaces@noexp{#1}\par
-%     }%
-% }
 
 \ExplSyntaxOn
 \newcommand\@SBCshowInstitutionsAsEndBlock{
@@ -2517,7 +2506,6 @@
         \egroup
       }
 
-    % --- INÍCIO DA ALTERAÇÃO (Autores e Instituições) ---
     \vspace{10pt}
     \bgroup
     \iftoggle{@SBCblind}
@@ -2526,7 +2514,6 @@
       \@SBCPrintAffiliations \par
     }{}
     \egroup
-    % --- FIM DA ALTERAÇÃO ---
 
     \vspace{6pt}
     \ifdefvoid{\@resumo}
@@ -3234,7 +3221,7 @@
 
 \ExplSyntaxOff
 
-% --- SOLUÇÃO FINAL PARA WARNING DE FONTE ---
+% --- SOLUÇÃO PARA WARNING DE FONTE ---
 % Isso altera a variável global que define o que é "texto inclinado".
 % Ao mudar para 'it' (itálico), o LaTeX para de procurar a forma 'sl' (que falta).
 \AtBeginDocument{%
