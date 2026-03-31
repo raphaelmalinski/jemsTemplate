@@ -2446,32 +2446,22 @@
     \hypersetup{hidelinks}
     \let\footnote\thanks
 
-    \twocolumn [
-      \begin{center}
-        {\Large\bfseries \@title \par}
-        \vspace{1.5em}
-        
-        % Autores (lê IDs e busca números)
-        {\large \@SBCHorizontalAuthors \par}
-        
-        % Instituições (lista todas as cadastradas via \institution)
-        \@SBCPrintAffiliations
-      \end{center}
-    ]
+    \twocolumn [\@SBCtitleblock]
 
     \@thanks
     \egroup
+
     \par\vspace{-\baselineskip}
+
     \@afterindentfalse\@afterheading
     \vspace{-30pt}\addvspace{30pt}
 }
-
 
 \newcommand{\@SBCtitleblock}{
     \bgroup
 
     \ifPDFTeX
-      \renewcommand*\sfdefault{\fira@family} % From the FiraSans package
+      \renewcommand*\sfdefault{\fira@family}
     \else
         \setsansfont{FiraSans}[
           Extension       = .otf,
@@ -2518,44 +2508,12 @@
 
     \vspace{10pt}
     \bgroup
-    \footnotesize
     \iftoggle{@SBCblind}
     {
-      \@SBCshowAuthors\par
+      {\large \@SBCHorizontalAuthors \par}
+      \@SBCPrintAffiliations \par
     }{}
     \egroup
-
-    \ifboolexpr {togl {@SBCinstitutionsInBlock} or togl {@SBCinstitutionsInParagraph}}
-      {
-        \vspace{9.2pt}
-        \bgroup
-        % In case someone adds a footnote to an institution...
-        \let\footnote\titlethanks
-        \let\thanks\titlethanks
-        \sffamily\tiny\itshape\@SBCshowInstitutionsAsBlock\par
-        \egroup
-      }
-      {}
-
-    \iftoggle{@SBCinstitutionsInFootnotes}{\@SBCshowInstitutionsAsFootnotes}{}
-
-    \ifboolexpr
-      {
-        togl {@SBCinstitutionsInBlock} or
-        togl {@SBCinstitutionsInParagraph} or
-        togl {@SBCinstitutionsInFootnotes} or
-        togl {@SBCinstitutionsAtEnd}
-      }
-      {}
-      {
-        \ifdefvoid{\@SBCextraAffiliationsFirst}
-          {}
-	  {\institutionthanks{\@SBCextraAffiliationsFirst}}
-
-        \ifdefvoid{\@SBCextraAffiliationsLast}
-          {}
-	  {\institutionthanks{\@SBCextraAffiliationsLast}}
-      }
 
     \vspace{6pt}
     \ifdefvoid{\@resumo}
@@ -2591,7 +2549,7 @@
       {\ClassWarningNoLine{sbc20}{No keywords defined!}}
       {
         \bgroup
-        \normalfont\small        {\bfseries\scshape Keywords:\enspace\space}\@keywords\par
+        \normalfont\small {\bfseries\scshape Keywords:\enspace\space}\@keywords\par
         \egroup
       }
     \par
