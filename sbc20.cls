@@ -1607,9 +1607,9 @@
     pubacron .value_required:n = true,
     
     % --- ALTERAÇÃO AQUI ---
-    % Alterado de .tl_gset (gravar valor) para .code:n (executar código vazio).
+    % Mudamos de .tl_gset (gravar valor) para .code:n (executar código vazio).
     % Isso faz com que o template ignore o "sbc20" vindo do .tex 
-    % e mantenha o "sbc" como padrão.
+    % e mantenha o "sbc" que definimos como padrão.
     bibstyle .code:n = {}, 
     bibstyle .value_required:n = true,
     % ----------------------
@@ -1636,6 +1636,7 @@
   
   \keys_set:nn {SBC/metadata}{#1}
 
+  % --- CORREÇÃO DEFINITIVA (Espaços Forçados + Fonte Menor) ---
   \str_if_eq:VnT \@articleLicense {CC-BY}
   {
      \tl_gset:Nn \@articleLicense {
@@ -1913,6 +1914,7 @@
 \@onlypreamble\datainfo
 \@onlypreamble\contributeinfo
 \@onlypreamble\aboutauthors
+% \@onlypreamble\SBCprintbibliography
 
 % Build two macros with the names of the authors:
 %
@@ -2134,6 +2136,15 @@
         \trim@spaces@noexp{#1}\par
     }%
 }
+
+% \newcommand\SBCprintbibliography[1]{%
+%     \protected@xdef\@SBCprintbibliography{\par
+%         \SBCprintInitKeyBibliography\par
+%         \printbibliography\par
+%         \SBCprintEndKeyBibliography\par
+%         \trim@spaces@noexp{#1}\par
+%     }%
+% }
 
 \ExplSyntaxOn
 \newcommand\@SBCshowInstitutionsAsEndBlock{
@@ -2446,32 +2457,22 @@
     \hypersetup{hidelinks}
     \let\footnote\thanks
 
-    \twocolumn [
-      \begin{center}
-        {\Large\bfseries \@title \par}
-        \vspace{1.5em}
-        
-        % Autores (lê IDs e busca números)
-        {\large \@SBCHorizontalAuthors \par}
-        
-        % Instituições (lista todas as cadastradas via \institution)
-        \@SBCPrintAffiliations
-      \end{center}
-    ]
+    \twocolumn [\@SBCtitleblock]
 
     \@thanks
     \egroup
+
     \par\vspace{-\baselineskip}
+
     \@afterindentfalse\@afterheading
     \vspace{-30pt}\addvspace{30pt}
 }
-
 
 \newcommand{\@SBCtitleblock}{
     \bgroup
 
     \ifPDFTeX
-      \renewcommand*\sfdefault{\fira@family} % From the FiraSans package
+      \renewcommand*\sfdefault{\fira@family}
     \else
         \setsansfont{FiraSans}[
           Extension       = .otf,
@@ -2516,46 +2517,16 @@
         \egroup
       }
 
+    % --- INÍCIO DA ALTERAÇÃO (Autores e Instituições) ---
     \vspace{10pt}
     \bgroup
-    \footnotesize
     \iftoggle{@SBCblind}
     {
-      \@SBCshowAuthors\par
+      {\large \@SBCHorizontalAuthors \par}
+      \@SBCPrintAffiliations \par
     }{}
     \egroup
-
-    \ifboolexpr {togl {@SBCinstitutionsInBlock} or togl {@SBCinstitutionsInParagraph}}
-      {
-        \vspace{9.2pt}
-        \bgroup
-        % In case someone adds a footnote to an institution...
-        \let\footnote\titlethanks
-        \let\thanks\titlethanks
-        \sffamily\tiny\itshape\@SBCshowInstitutionsAsBlock\par
-        \egroup
-      }
-      {}
-
-    \iftoggle{@SBCinstitutionsInFootnotes}{\@SBCshowInstitutionsAsFootnotes}{}
-
-    \ifboolexpr
-      {
-        togl {@SBCinstitutionsInBlock} or
-        togl {@SBCinstitutionsInParagraph} or
-        togl {@SBCinstitutionsInFootnotes} or
-        togl {@SBCinstitutionsAtEnd}
-      }
-      {}
-      {
-        \ifdefvoid{\@SBCextraAffiliationsFirst}
-          {}
-	  {\institutionthanks{\@SBCextraAffiliationsFirst}}
-
-        \ifdefvoid{\@SBCextraAffiliationsLast}
-          {}
-	  {\institutionthanks{\@SBCextraAffiliationsLast}}
-      }
+    % --- FIM DA ALTERAÇÃO ---
 
     \vspace{6pt}
     \ifdefvoid{\@resumo}
@@ -2591,7 +2562,7 @@
       {\ClassWarningNoLine{sbc20}{No keywords defined!}}
       {
         \bgroup
-        \normalfont\small        {\bfseries\scshape Keywords:\enspace\space}\@keywords\par
+        \normalfont\small {\bfseries\scshape Keywords:\enspace\space}\@keywords\par
         \egroup
       }
     \par
@@ -3263,7 +3234,7 @@
 
 \ExplSyntaxOff
 
-% --- SOLUÇÃO PARA WARNING DE FONTE ---
+% --- SOLUÇÃO FINAL PARA WARNING DE FONTE ---
 % Isso altera a variável global que define o que é "texto inclinado".
 % Ao mudar para 'it' (itálico), o LaTeX para de procurar a forma 'sl' (que falta).
 \AtBeginDocument{%
